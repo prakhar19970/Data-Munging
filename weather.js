@@ -2,7 +2,7 @@ const { Common } = require("./common");
 const weatherData = [];
 class weather extends Common{
 
-static transferdata(weatherData) {
+static operateData(weatherData) {
   let row = [];
   let rowswithoutspaces=[]
   let resultObject = {};
@@ -27,7 +27,7 @@ mintempspread=resultObject.mindifference;
 weather.readfile('weather.dat')
   .then(result => {
       //console.log(result);
-    weather.transferdata(result)
+    weather.operateData(result)
   })
   .catch(error => {
     console.log(error);

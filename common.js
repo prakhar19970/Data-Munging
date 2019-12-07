@@ -16,7 +16,9 @@ class Common {
         })
         .on("end", () => {
           // console.log(dataRead)
+          if(dataRead)
           resolve(dataRead)
+          reject(error)
         })
     });
   }

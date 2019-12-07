@@ -1,43 +1,34 @@
-const fs = require("fs");
-const csv = require("fast-csv");
+const { Common } = require("./common");
 const weatherData = [];
-fs.createReadStream("weather.dat")
-  .pipe(csv.parse({ headers: false }))
-  .on("data", row => {
-    weatherData.push(row);
-  })
-  .on("end", () => {
-    //console.log(weatherData);
-    transferdata(weatherData);
-  });
+class weather extends Common{
 
-function transferdata(weatherData) {
+static transferdata(weatherData) {
   let row = [];
+  let rowswithoutspaces=[]
+  let resultObject = {};
   let mintempspread=0,day=0,x=0,y=0;
   for (let i=2 ; i < weatherData.length;i++) {
     row = weatherData[i].toString().trim().split(" ");
-    if(String(row[0])=== 'mo')
-    {
-    x=String(row[2]);
-    y=String(row[4]);
-    }
-    else{
-    x = String(row[2]);
-    y = String(row[6]);
-    if (x.includes("*") || y[6] === ' ') {
-      x = x.replace("*", "");
-      y = row[5];
-    } else {
-      y = y.replace("*", "");
-    }
-}
-    let tempspread=Number(x-y);
-    if(mintempspread === 0 || mintempspread >tempspread)
-    {
-        mintempspread=tempspread;
-        day=row[0];
-    }
-  // console.log(`Max temp: ${x} Min temp: ${y} Temp spread: ${x - y}`);
+    rowswithoutspaces=row.filter((data)=> data !== '');
+    x=String(rowswithoutspaces[1])
+    y=String(rowswithoutspaces[2])
+    if (x.includes("*")){
+        x = x.replace("*", "");   
+    }else {
+              y = y.replace("*", "");
+            }
+resultObject=weather.findingMinimum(mintempspread,x,y,row[0])
+mintempspread=resultObject.mindifference;
   }
-  console.log(`minimum temperature spread for day ${day} = ${mintempspread}`);
+  console.log(`minimum temperature spread for day ${resultObject.attribute} = ${resultObject.mindifference}`);
 }
+}
+
+weather.readfile('weather.dat')
+  .then(result => {
+      //console.log(result);
+    weather.transferdata(result)
+  })
+  .catch(error => {
+    console.log(error);
+  });

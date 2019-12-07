@@ -15,10 +15,9 @@ class Common {
           dataRead.push(row);
         })
         .on("end", () => {
-          // console.log(dataRead)
           if(dataRead)
           resolve(dataRead)
-          reject(error)
+          reject()
         })
     });
   }

@@ -2,24 +2,18 @@ const { Common } = require("./common");
 const weatherData = [];
 class weather extends Common {
 
-  static operateData(weatherData) {
-    let row = [];
-    let rowswithoutspaces = []
-    let resultObject = {};
-    let mintempspread = 0;
-    for (let i = 2; i < weatherData.length; i++) {
-      row = weatherData[i][0].trim().replace("*","").split(" ");
-      rowswithoutspaces = row.filter((data) => data !== '');
-      resultObject = weather.findingMinimum(mintempspread, rowswithoutspaces[1], rowswithoutspaces[2], row[0])
-      mintempspread = resultObject.mindifference;
-    }
-    console.log(`minimum temperature spread for day ${resultObject.attribute} = ${resultObject.mindifference}`);
-  }
 }
 
 weather.readfile('weather.dat')
   .then(result => {
-    weather.operateData(result)
+    //console.log(result);
+    const startIndex = 2;
+    const maxTempColumn = 1;
+    const minTempColumn = 2;
+    const dayOfMonthColumn = 0;
+    resultObject = {};
+    resultObject = weather.modifyData(startIndex, maxTempColumn, minTempColumn, dayOfMonthColumn, result);
+    console.log(`minimum temperature spread for day ${resultObject.attribute} = ${resultObject.mindifference}`);
   })
   .catch(error => {
     console.log(error);
